@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-from __future__ import print_function
+
 import sys
 import string
-import os
 import subprocess
 
 #----------------------------------------------------------------------
@@ -27,7 +26,7 @@ def main():
     # Note that we will take one extra step per dihedral to capture the initial conformation
     # Read in name of original pdb file, and store the base file name (without the pdb)
     pdb_file = sys.argv[1]
-    base = pdb_file.split('.')[0]
+    base = pdb_file.split('/')[-1].split('.')[0]
     gzmat_file = base + ".gzmat"
     diheds = []
     stepsizes = []
@@ -40,7 +39,8 @@ def main():
     #----------------------------------------------------------------------
     # Generate gzmat file from pdb file
     #----------------------------------------------------------------------
-    process = subprocess.Popen("babel -ipdb {0} -ogzmat {1}".format(pdb_file, gzmat_file).split())
+    process = subprocess.Popen("babel -ipdb {0} -ogzmat {1}".format(pdb_file, gzmat_file).split(), stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
     process.communicate()
     gzmat = get_contents(gzmat_file)
     
@@ -73,7 +73,8 @@ def main():
         if n_dihed == 1:
             # generate file and convert back to pdb format
             write_to_file(new_gzmat_file,gzmat)
-            process = subprocess.Popen("babel -igzmat {0} -opdb {1}".format(new_gzmat_file, new_pdb_file).split())
+            process = subprocess.Popen("babel -igzmat {0} -opdb {1}".format(new_gzmat_file, new_pdb_file).split(), stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
             process.communicate() 
         else:
             for i1 in range(0,nsteps[1]):
@@ -85,7 +86,8 @@ def main():
                 if n_dihed == 2:
                     # generate file and convert back to pdb format
                     write_to_file(new_gzmat_file,gzmat)
-                    process = subprocess.Popen("babel -igzmat {0} -opdb {1}".format(new_gzmat_file, new_pdb_file).split())
+                    process = subprocess.Popen("babel -igzmat {0} -opdb {1}".format(new_gzmat_file, new_pdb_file).split(), stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
                     process.communicate()
                 else:
                     for i2 in range(0,nsteps[2]):
@@ -97,10 +99,11 @@ def main():
                         if n_dihed == 3:
                             # generate file and convert back to pdb format
                             write_to_file(new_gzmat_file,gzmat)
-                            process = subprocess.Popen("babel -igzmat {0} -opdb {1}".format(new_gzmat_file, new_pdb_file).split())
+                            process = subprocess.Popen("babel -igzmat {0} -opdb {1}".format(new_gzmat_file, new_pdb_file).split(), stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
                             process.communicate()
                         else:
-                            print('Error: more than 3 dihedrals, should not be able to get here')
+                            print 'Error: more than 3 dihedrals, should not be able to get here'
                             sys.exit()
                             
 if __name__ == '__main__':
@@ -109,14 +112,14 @@ if __name__ == '__main__':
     #----------------------------------------------------------------------
     
     if (len(sys.argv)-2)%3 != 0 or len(sys.argv) == 2:
-        print('Usage: scan_dihedral.py <pdb_file_name> <dihedral name 1> <step size 1> <number of steps 1>') 
-        print('       ...  ...  ...  ...  <dihedral name N> <step size N> <number of steps N>') 
+        print 'Usage: scan_dihedral.py <pdb_file_name> <dihedral name 1> <step size 1> <number of steps 1>' 
+        print '       ...  ...  ...  ...  <dihedral name N> <step size N> <number of steps N>'
     else:    
         # Calculate the number of dihedrals to change based on the number of arguments supplied
         n_dihed = (len(sys.argv)-2)/3
         if (n_dihed > 3): 
-            print('Changing more than 3 dihedrals at once, are you sure?')
-            print('If so, you will need to edit the python script to remove the sys.exit() statement')
-            print('And write some more do loops in the main part of the code')
+            print 'Changing more than 3 dihedrals at once, are you sure?'
+            print 'If so, you will need to edit the python script to remove the sys.exit() statement'
+            print 'And write some more do loops in the main part of the code'
             sys.exit()
         main()

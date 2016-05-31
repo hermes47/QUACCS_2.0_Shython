@@ -149,9 +149,19 @@ Using shell scripts to automate your work is already pretty cool and potentially
 Python is a powerful and flexible scripting language that gives you the ability to do all of these things (and more!). In the interests of time, you will be provided with an example python script that automatically generates a shell script like the one you have just done manually but allowing you to change up to 3 dihedrals at a time. Have a look and see if you can follow what is happening. If you feel confident, have a go at writing your own python script using this as a template. You can also run this code.\\
 \\
 \noindent
+Possible ways to extend or modify the script could be:
+\begin{itemize}
+\item Allow for any number, $N$, of dihedrals to be modified simultaneously. Hint: the code in the template has a number of nested loops in order to be able to handle up to three dihedrals at a time. This method is unfeasible in the case of $N$ dihedrals. The function \texttt{all\_combinations} may be useful to overcome this.
+\item Instead of just generating input files, try minimising the generated structure using a forcefield before saving the input file. The command \texttt{obminimize -ff UFF filename.extension} will be useful here. You will need to extract the minimised conformation from the output of the command and save it to a file. The function \texttt{extract\_results} shows an example of how to extract results from a command. This command uses the Universal Force Field (UFF). Other forcefields available are: General Amber Force Field (GAFF) and MMFF94 force field (MMFF94).
+\item Perhaps you're not interested in performing QM calculations, and just want to plot the energy of a dihedral as it is rotated about (it should give a nice sinusoidal plot). Plotting example functions are provided. You will need to extract the energy of the conformation from the obminimize output. Hint: obminimize takes an option `-n' which gives an upper limit to the number of steps to take during minimisation. How about plotting a 2-dimensional version when two dihedrals are changed?
+\item The rotational energy profile of a dihedral should be sinusoidal. Why not calculate the sine (or cosine) function that matches it the best? How about fitting a Fourier series? What about fitting to more than one dihedral simultaneously?
+\end{itemize}
+
+%\\
+\noindent
 Codeacademy has a really great beginners tutorial if you are interested in learning more python:\\
 
-http://www.codecademy.com/tracks/python\\
+http://www.codeacademy.com/tracks/python\\
 \\
 \noindent
 And I also recommend the text/reference book `Practical Programming: An Introduction To Computer Science Using Python 3':\\
