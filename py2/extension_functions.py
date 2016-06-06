@@ -3,7 +3,7 @@ possible python extension exercises. Some functions are complete, others will
 require completion before they will work. To use, copy and paste the entire
 function into your script file.
 """
-
+import numpy as np
 #----------------------------------------------------------------------
 # Given a number of lists, this function will return all combinations
 # of those lists. eg: a = [1,2]; b = [3,4]; c = [5,6]
@@ -152,10 +152,10 @@ def fit_torsion_terms_lls(energies, angles):
     #---------------------------------------------------------------------- 
     
     assert len(energies) == len(angles)
-    
+    m = 6; t = 1
     coefficient_matrix = np.zeros((1,m*t))
     target_vector = np.array((0))
-
+    num_of_coefficients = 6
     # for each data point
     for i in range(len(energies)):
         # build each line of the coefficient matrix
